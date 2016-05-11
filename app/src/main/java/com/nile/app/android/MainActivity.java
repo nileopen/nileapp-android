@@ -1,9 +1,8 @@
 package com.nile.app.android;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.nalib.frame.activity.NaBaseActivity;
+import com.nalib.frame.app.NaBaseActivity;
 
 public class MainActivity extends NaBaseActivity {
 
