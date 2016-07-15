@@ -8,7 +8,7 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.nalib.frame.app.NaBaseActivity;
+import com.nalib.fwk.app.NaBaseActivity;
 
 public class MainActivity extends NaBaseActivity {
 

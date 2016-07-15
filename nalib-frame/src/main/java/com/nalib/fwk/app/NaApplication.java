@@ -1,4 +1,4 @@
-package com.nalib.frame.app;
+package com.nalib.fwk.app;
 
 import android.app.Application;
 

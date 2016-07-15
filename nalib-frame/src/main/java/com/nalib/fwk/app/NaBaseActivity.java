@@ -1,4 +1,4 @@
-package com.nalib.frame.app;
+package com.nalib.fwk.app;
 
 import android.support.v7.app.AppCompatActivity;
 
