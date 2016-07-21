@@ -1,7 +1,7 @@
 package com.nalib.fwk.api;
 
-import com.nalib.frame.BuildConfig;
-import com.nalib.fwk.utils.log.NaLog;
+import com.nalib.fwk.BuildConfig;
+import com.nalib.fwk.utils.NaLog;
 
 /**
  * Created by taotao on 16/7/14.

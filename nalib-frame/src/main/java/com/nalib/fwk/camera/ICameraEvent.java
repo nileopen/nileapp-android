@@ -20,4 +20,8 @@ public interface ICameraEvent {
 
     // Callback invoked when camera closed.
     void onCameraClosed();
+
+    void onSwicthCamera(boolean isSuccess);
+
+    void onSwithcLight(boolean isSuccess);
 }

@@ -1,6 +1,5 @@
 package com.nalib.fwk.camera;
 
-import android.graphics.ImageFormat;
 import android.os.Handler;
 import android.os.HandlerThread;
 
@@ -24,6 +23,7 @@ public class NaCameraManager implements ICameraEngine, ICameraEvent{
             synchronized (NaCameraManager.class) {
                 if (sInstance == null) {
                     sInstance = new NaCameraManager();
+                    sInstance.init();
                 }
             }
         }
@@ -34,20 +34,25 @@ public class NaCameraManager implements ICameraEngine, ICameraEvent{
         return sThreadId++;
     }
 
-    public void init() {
+    private void init() {
         if (mCameraThread != null) {
             mCameraThread = new HandlerThread(Tag + "-" + getThreadId());
             mCameraThread.start();
             mCameraHanlder = new Handler(mCameraThread.getLooper());
         }
+
+        if (mCameraEngine == null) {
+            mCameraEngine = new NaCameraEngine();
+        }
     }
 
-    public void release(){
+    private void release() {
         if (mCameraThread != null){
             mCameraThread.quit();
         }
         mCameraThread = null;
         mCameraHanlder = null;
+        sInstance = null;
     }
 
     @Override
@@ -56,6 +61,44 @@ public class NaCameraManager implements ICameraEngine, ICameraEvent{
         if (mCameraEngine != null){
             mCameraEngine.setCameraEvent(this);
         }
+    }
+
+    @Override
+    public void openCamera(int cameraId) {
+        if (mCameraEngine != null) {
+            mCameraEngine.openCamera(cameraId);
+        }
+    }
+
+    @Override
+    public void switchCamera() {
+        if (mCameraEngine != null) {
+            mCameraEngine.switchCamera();
+        }
+    }
+
+    @Override
+    public void closeCamera() {
+        if (mCameraEngine != null) {
+            mCameraEngine.closeCamera();
+        }
+    }
+
+    @Override
+    public void switchLight(boolean isOpen) {
+        if (mCameraEngine != null) {
+            mCameraEngine.switchLight(isOpen);
+        }
+    }
+
+    @Override
+    public void destroy() {
+        if (mCameraEngine != null) {
+            mCameraEngine.destroy();
+        }
+        mCameraEngine = null;
+        mCameraEvent = null;
+        release();
     }
 
     @Override
@@ -90,6 +133,20 @@ public class NaCameraManager implements ICameraEngine, ICameraEvent{
     public void onCameraClosed() {
         if (mCameraEvent != null){
             mCameraEvent.onCameraClosed();
+        }
+    }
+
+    @Override
+    public void onSwicthCamera(boolean isSuccess) {
+        if (mCameraEvent != null) {
+            mCameraEvent.onSwicthCamera(isSuccess);
+        }
+    }
+
+    @Override
+    public void onSwithcLight(boolean isSuccess) {
+        if (mCameraEvent != null) {
+            mCameraEvent.onSwithcLight(isSuccess);
         }
     }
 }

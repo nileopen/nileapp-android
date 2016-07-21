@@ -1,8 +1,8 @@
-package com.nalib.fwk.utils.log;
+package com.nalib.fwk.utils;
 
 import android.util.Log;
 
-import com.nalib.frame.BuildConfig;
+import com.nalib.fwk.BuildConfig;
 
 /**
  * Created by taotao on 16/7/14.
