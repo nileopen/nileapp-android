@@ -1,4 +1,4 @@
-package com.nile.app.android;
+package com.nile.app.android.app;
 
 import com.nalib.fwk.app.NaApplication;
 

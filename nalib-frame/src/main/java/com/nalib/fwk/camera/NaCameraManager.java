@@ -6,7 +6,7 @@ import android.os.HandlerThread;
 /**
  * Created by taotao on 16/7/14.
  */
-public class NaCameraManager implements ICameraEngine, ICameraEvent{
+public class NaCameraManager implements ICameraEngine, ICameraEvent {
 
     private final static String Tag = "NaCameraManager";
     private static int sThreadId = 1000;
@@ -47,7 +47,7 @@ public class NaCameraManager implements ICameraEngine, ICameraEvent{
     }
 
     private void release() {
-        if (mCameraThread != null){
+        if (mCameraThread != null) {
             mCameraThread.quit();
         }
         mCameraThread = null;
@@ -58,7 +58,7 @@ public class NaCameraManager implements ICameraEngine, ICameraEvent{
     @Override
     public void setCameraEvent(ICameraEvent event) {
         this.mCameraEvent = event;
-        if (mCameraEngine != null){
+        if (mCameraEngine != null) {
             mCameraEngine.setCameraEvent(this);
         }
     }
@@ -103,35 +103,35 @@ public class NaCameraManager implements ICameraEngine, ICameraEvent{
 
     @Override
     public void onCameraError(String errorDescription) {
-        if (mCameraEvent != null){
+        if (mCameraEvent != null) {
             mCameraEvent.onCameraError(errorDescription);
         }
     }
 
     @Override
     public void onCameraFreezed(String errorDescription) {
-        if (mCameraEvent != null){
+        if (mCameraEvent != null) {
             mCameraEvent.onCameraFreezed(errorDescription);
         }
     }
 
     @Override
     public void onCameraOpening(int cameraId) {
-        if (mCameraEvent != null){
+        if (mCameraEvent != null) {
             mCameraEvent.onCameraOpening(cameraId);
         }
     }
 
     @Override
     public void onFirstFrameAvailable() {
-        if (mCameraEvent != null){
+        if (mCameraEvent != null) {
             mCameraEvent.onFirstFrameAvailable();
         }
     }
 
     @Override
     public void onCameraClosed() {
-        if (mCameraEvent != null){
+        if (mCameraEvent != null) {
             mCameraEvent.onCameraClosed();
         }
     }
@@ -149,4 +149,5 @@ public class NaCameraManager implements ICameraEngine, ICameraEvent{
             mCameraEvent.onSwithcLight(isSuccess);
         }
     }
+
 }

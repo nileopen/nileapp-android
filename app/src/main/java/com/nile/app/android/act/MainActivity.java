@@ -1,4 +1,4 @@
-package com.nile.app.android;
+package com.nile.app.android.act;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.nalib.fwk.app.NaBaseActivity;
+import com.nile.app.android.R;
 
 public class MainActivity extends NaBaseActivity {
 

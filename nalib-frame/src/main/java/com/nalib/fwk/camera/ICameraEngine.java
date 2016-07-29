@@ -19,4 +19,5 @@ public interface ICameraEngine {
     void switchLight(boolean isOpen);
 
     void destroy();
+
 }
