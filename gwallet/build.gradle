@@ -1,4 +1,4 @@
-apply plugin: 'com.android.model.application'
+apply plugin: 'com.android.model.library'
 
 model {
     android {
@@ -6,7 +6,6 @@ model {
         buildToolsVersion = "23.0.2"
 
         defaultConfig {
-            applicationId "com.nile.app.android"
             minSdkVersion.apiLevel = 9
             targetSdkVersion.apiLevel = 23
             versionCode 1
@@ -25,8 +24,4 @@ model {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    //    compile 'com.facebook.fresco:fresco:0.10.0'
-    compile project(':nalib-frame')
-    compile project(':uninstall')
-    compile project(':gwallet')
 }

@@ -1,1 +1,1 @@
-include ':app', ':nalib-frame', ':uninstall'
+include ':app', ':nalib-frame', ':uninstall', ':gwallet'
