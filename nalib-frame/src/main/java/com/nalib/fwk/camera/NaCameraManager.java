@@ -102,6 +102,13 @@ public class NaCameraManager implements ICameraEngine, ICameraEvent {
     }
 
     @Override
+    public void setSurfaceHelper(ISurfaceHelper helper) {
+        if (mCameraEngine != null) {
+            mCameraEngine.setSurfaceHelper(helper);
+        }
+    }
+
+    @Override
     public void onCameraError(String errorDescription) {
         if (mCameraEvent != null) {
             mCameraEvent.onCameraError(errorDescription);
@@ -137,9 +144,9 @@ public class NaCameraManager implements ICameraEngine, ICameraEvent {
     }
 
     @Override
-    public void onSwicthCamera(boolean isSuccess) {
+    public void onSwicthCamera(boolean isSuccess, int cameraId) {
         if (mCameraEvent != null) {
-            mCameraEvent.onSwicthCamera(isSuccess);
+            mCameraEvent.onSwicthCamera(isSuccess, cameraId);
         }
     }
 

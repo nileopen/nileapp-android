@@ -1,9 +1,12 @@
 package com.nalib.fwk.camera;
 
+import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.SystemClock;
+import android.view.SurfaceHolder;
 
+import com.nalib.fwk.NaApi;
 import com.nalib.fwk.camera.util.CaptureFormat;
 import com.nalib.fwk.camera.util.FramerateRange;
 import com.nalib.fwk.camera.util.NaCameraEnumerator;
@@ -40,6 +43,8 @@ public class NaCameraEngine implements ICameraEngine, Camera.PreviewCallback {
     private boolean isCapturingToTexture = false;
     private boolean mDropNextFrame = false;
     private boolean isFirstFrameReported = false;
+
+    private ISurfaceHelper mSurfaceHelper;
 
     @Override
     public void setCameraEvent(ICameraEvent event) {
@@ -86,6 +91,24 @@ public class NaCameraEngine implements ICameraEngine, Camera.PreviewCallback {
         mCameraInfo = new Camera.CameraInfo();
         Camera.getCameraInfo(mCameraId, mCameraInfo);
 
+        if (mSurfaceHelper != null) {
+            try {
+                SurfaceTexture sf = mSurfaceHelper.getSurfaceTexture();
+                if (sf != null) {
+                    mCamera.setPreviewTexture(sf);
+                }
+
+                SurfaceHolder holder = mSurfaceHelper.getSurfaceHolder();
+
+                if (holder != null) {
+                    mCamera.setPreviewDisplay(holder);
+                }
+
+            } catch (Throwable e) {
+                NaLog.w(Tag, "set Texture or Display err", e);
+            }
+        }
+
         mCamera.setErrorCallback(new Camera.ErrorCallback() {
             @Override
             public void onError(int error, Camera camera) {
@@ -99,6 +122,14 @@ public class NaCameraEngine implements ICameraEngine, Camera.PreviewCallback {
                 }
             }
         });
+
+        mCamera.autoFocus(new Camera.AutoFocusCallback() {
+            @Override
+            public void onAutoFocus(boolean success, Camera camera) {
+                NaLog.d(Tag, "onAutoFocus success=" + success);
+            }
+        });
+
         startPreview(mWidth, mHeight, mFrameRate);
     }
 
@@ -177,11 +208,12 @@ public class NaCameraEngine implements ICameraEngine, Camera.PreviewCallback {
             this.mCaptureFormat = captureFormat;
 
             List<String> focusModes = parameters.getSupportedFocusModes();
-            if (focusModes.contains(android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
-                parameters.setFocusMode(android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+            if (focusModes.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
+                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
             }
 
             mCamera.setParameters(parameters);
+            mCamera.setDisplayOrientation(90);
             if (!isCapturingToTexture) {
                 mQueuedBuffers.clear();
                 final int frameSize = captureFormat.frameSize();
@@ -205,7 +237,7 @@ public class NaCameraEngine implements ICameraEngine, Camera.PreviewCallback {
                 mDropNextFrame = true;
                 openCamera(mCameraId + 1);
                 if (mEvent != null) {
-                    mEvent.onSwicthCamera(true);
+                    mEvent.onSwicthCamera(true, mCameraId);
                     return;
                 }
             }
@@ -213,7 +245,7 @@ public class NaCameraEngine implements ICameraEngine, Camera.PreviewCallback {
             NaLog.e(Tag, "switchCamera failed", e);
         }
         if (mEvent != null) {
-            mEvent.onSwicthCamera(false);
+            mEvent.onSwicthCamera(false, mCameraId);
         }
     }
 
@@ -272,6 +304,11 @@ public class NaCameraEngine implements ICameraEngine, Camera.PreviewCallback {
     }
 
     @Override
+    public void setSurfaceHelper(ISurfaceHelper helper) {
+        mSurfaceHelper = helper;
+    }
+
+    @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
         if (mCamera == null || !mQueuedBuffers.contains(data)) {
             // The camera has been stopped or |data| is an old invalid buffer.
@@ -282,8 +319,7 @@ public class NaCameraEngine implements ICameraEngine, Camera.PreviewCallback {
             throw new RuntimeException("Unexpected camera in callback!");
         }
 
-        final long captureTimeNs =
-                TimeUnit.MILLISECONDS.toNanos(SystemClock.elapsedRealtime());
+        final long captureTimeNs = TimeUnit.MILLISECONDS.toNanos(SystemClock.elapsedRealtime());
 
         if (mEvent != null && !isFirstFrameReported) {
             mEvent.onFirstFrameAvailable();
@@ -293,6 +329,13 @@ public class NaCameraEngine implements ICameraEngine, Camera.PreviewCallback {
 //        cameraStatistics.addFrame();
 //        frameObserver.onByteBufferFrameCaptured(data, captureFormat.width, captureFormat.height,
 //                getFrameOrientation(), captureTimeNs);
+        if (mSurfaceHelper != null) {
+            int width = mCaptureFormat.width;
+            int height = mCaptureFormat.height;
+            boolean isBack = (mCameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK);
+            int orientation = NaApi.getApi().getFrameOrientation(isBack, mCameraInfo.orientation);
+            mSurfaceHelper.onPreviewFrame(data, width, height, orientation, captureTimeNs);
+        }
         mCamera.addCallbackBuffer(data);
     }
 }

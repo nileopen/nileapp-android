@@ -1,7 +1,6 @@
 package com.nile.app.android.act;
 
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -35,12 +34,12 @@ public class MainActivity extends NaBaseActivity {
                 .setAutoPlayAnimations(true)
                 .build();
         aniView.setController(controller);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             //Android 5.0以上主进程被杀后，fork出的进程也会被杀，所以无法实现监听
             UninstallJni ujni = new UninstallJni();
             ujni.setUrl("http://www.youja.cn");
             ujni.registerUninstall(this);
-        }
+//        }
 //        String us = ujni.getUserSerial(this);
 //        Log.e("uninstall_jni", "us=" + us);
     }

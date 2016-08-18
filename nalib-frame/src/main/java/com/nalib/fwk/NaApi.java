@@ -1,5 +1,7 @@
 package com.nalib.fwk;
 
+import android.content.Context;
+
 import com.nalib.fwk.api.NaApiSub;
 
 /**
@@ -8,12 +10,12 @@ import com.nalib.fwk.api.NaApiSub;
 public class NaApi {
     private static NaApiSub sApi;
 
-    public static void init() {
+    public static void init(Context context) {
         if (sApi == null) {
             synchronized (NaApi.class) {
                 if (sApi == null) {
                     sApi = new NaApiSub();
-                    sApi.init();
+                    sApi.init(context);
                 }
             }
         }
@@ -36,6 +38,9 @@ public class NaApi {
         if (sApi != null){
             sApi.setLogLevel(level);
         }
+    }
 
+    public static NaApiSub getApi() {
+        return sApi;
     }
 }
