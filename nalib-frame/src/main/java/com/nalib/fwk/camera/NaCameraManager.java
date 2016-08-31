@@ -109,6 +109,20 @@ public class NaCameraManager implements ICameraEngine, ICameraEvent {
     }
 
     @Override
+    public void setZoom(float scale) {
+        if (mCameraEngine != null) {
+            mCameraEngine.setZoom(scale);
+        }
+    }
+
+    @Override
+    public void setFocus() {
+        if (mCameraEngine != null) {
+            mCameraEngine.setFocus();
+        }
+    }
+
+    @Override
     public void onCameraError(String errorDescription) {
         if (mCameraEvent != null) {
             mCameraEvent.onCameraError(errorDescription);
@@ -154,6 +168,13 @@ public class NaCameraManager implements ICameraEngine, ICameraEvent {
     public void onSwithcLight(boolean isSuccess) {
         if (mCameraEvent != null) {
             mCameraEvent.onSwithcLight(isSuccess);
+        }
+    }
+
+    @Override
+    public void onZoom(int curZoom, boolean isSuccess) {
+        if (mCameraEvent != null) {
+            mCameraEvent.onZoom(curZoom, isSuccess);
         }
     }
 

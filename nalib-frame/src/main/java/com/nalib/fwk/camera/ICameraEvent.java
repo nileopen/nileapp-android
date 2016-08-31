@@ -24,4 +24,6 @@ public interface ICameraEvent {
     void onSwicthCamera(boolean isSuccess, int cameraId);
 
     void onSwithcLight(boolean isSuccess);
+
+    void onZoom(int curZoom, boolean isSuccess);
 }

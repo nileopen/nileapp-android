@@ -128,7 +128,7 @@ public class WebRtcActivity extends AppCompatActivity {
         mediaStream.addTrack(localAudioTrack);
 
         ArrayList<PeerConnection.IceServer> list = new ArrayList();
-        list.add(new PeerConnection.IceServer("https://appear.in/1233"));
+        list.add(new PeerConnection.IceServer("https://192.168.11.23:8080"));
 
         MediaConstraints constraints = new MediaConstraints();
         constraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"));

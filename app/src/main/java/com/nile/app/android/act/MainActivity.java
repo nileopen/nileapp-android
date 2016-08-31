@@ -39,6 +39,7 @@ public class MainActivity extends NaBaseActivity {
             UninstallJni ujni = new UninstallJni();
             ujni.setUrl("http://www.youja.cn");
             ujni.registerUninstall(this);
+
 //        }
 //        String us = ujni.getUserSerial(this);
 //        Log.e("uninstall_jni", "us=" + us);

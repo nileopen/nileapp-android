@@ -1,5 +1,6 @@
 package com.nalib.fwk.camera;
 
+import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.os.Build;
@@ -15,6 +16,7 @@ import com.nalib.fwk.utils.DeviceUtil;
 import com.nalib.fwk.utils.NaLog;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,6 +47,8 @@ public class NaCameraEngine implements ICameraEngine, Camera.PreviewCallback {
     private boolean isFirstFrameReported = false;
 
     private ISurfaceHelper mSurfaceHelper;
+
+    private int mCurrentZoom = 0;
 
     @Override
     public void setCameraEvent(ICameraEvent event) {
@@ -135,7 +139,7 @@ public class NaCameraEngine implements ICameraEngine, Camera.PreviewCallback {
 
     private void startPreview(int width, int height, int framerate) {
         if (mCamera != null && width > 0 && height > 0 && framerate > 0) {
-            final android.hardware.Camera.Parameters parameters = mCamera.getParameters();
+            final Camera.Parameters parameters = mCamera.getParameters();
             if (parameters == null) {
                 return;
             }
@@ -306,6 +310,85 @@ public class NaCameraEngine implements ICameraEngine, Camera.PreviewCallback {
     @Override
     public void setSurfaceHelper(ISurfaceHelper helper) {
         mSurfaceHelper = helper;
+    }
+
+    @Override
+    public void setZoom(float scale) {
+        boolean isSuccess = false;
+        if (mCamera != null) {
+            try {
+                Camera.Parameters parameters = mCamera.getParameters();
+                if (parameters.isZoomSupported()) {
+                    int maxZoom = parameters.getMaxZoom();
+                    int curZoom = parameters.getZoom();
+
+                    if (scale > 1.0f) {
+                        curZoom++;
+                    } else if (scale < 1.0f) {
+                        curZoom--;
+                    }
+                    if (curZoom < 0) {
+                        curZoom = 0;
+                    }
+                    if (curZoom > maxZoom) {
+                        curZoom = maxZoom;
+                    }
+                    parameters.setZoom(curZoom);
+                    mCamera.setParameters(parameters);
+                    mCurrentZoom = curZoom;
+                    isSuccess = true;
+                }
+            } catch (Throwable e) {
+                NaLog.e(Tag, "setZoom e=" + e);
+            }
+        }
+
+        if (mEvent != null) {
+            mEvent.onZoom(mCurrentZoom, isSuccess);
+        }
+
+    }
+
+    @Override
+    public void setFocus() {
+        if (mCamera != null) {
+            try {
+                Camera.Parameters parameters = mCamera.getParameters();
+                List<Camera.Area> focusAreas = new ArrayList();
+                focusAreas.add(new Camera.Area(new Rect(-100, -100, 100, 100), 100));
+                parameters.setFocusAreas(focusAreas);
+//                List<String> focusModes = parameters.getSupportedFocusModes();
+//                if (focusModes.contains(Camera.Parameters.FOCUS_MODE_MACRO)) {
+//                    parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_MACRO);
+//                }
+
+//                mCamera.autoFocus(new Camera.AutoFocusCallback() {
+//                    @Override
+//                    public void onAutoFocus(boolean success, Camera camera) {
+//                        setCurrentFocusMode();
+//                    }
+//                });
+                mCamera.setParameters(parameters);
+            } catch (Throwable e) {
+                NaLog.e(Tag, "setFocus e=" + e);
+            }
+        }
+    }
+
+    private void setCurrentFocusMode() {
+        NaLog.d(Tag, "setCurrentFocusMode");
+        if (mCamera != null) {
+            try {
+                Camera.Parameters parameters = mCamera.getParameters();
+                List<String> focusModes = parameters.getSupportedFocusModes();
+                if (focusModes.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
+                    parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+                }
+                mCamera.setParameters(parameters);
+            } catch (Throwable e) {
+                NaLog.d(Tag, "setCurrentFocusMode e=" + e);
+            }
+        }
     }
 
     @Override
