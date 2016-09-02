@@ -2,17 +2,15 @@ package com.nalib.fwk.app;
 
 import android.app.Application;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.nalib.fwk.NaApi;
-import com.nalib.fwk.utils.NaLog;
+import com.nalib.fwk.http.NaHttpUtil;
 
 public class NaApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fresco.initialize(this);
         NaApi.init(this);
-        NaApi.setIsDebug(true);
-        NaApi.setLogLevel(NaLog.VERBOSE);
+        NaHttpUtil.init();
+//        LeakCanary.install(this);
     }
 }

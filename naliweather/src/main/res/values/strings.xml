@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">哪儿天气</string>
+    <string name="act_main_fresh">更新</string>
+    <string name="act_main_nodata">暂无数据</string>
+</resources>

@@ -7,13 +7,13 @@ import android.os.Build;
 import android.os.SystemClock;
 import android.view.SurfaceHolder;
 
-import com.nalib.fwk.NaApi;
 import com.nalib.fwk.camera.util.CaptureFormat;
 import com.nalib.fwk.camera.util.FramerateRange;
 import com.nalib.fwk.camera.util.NaCameraEnumerator;
 import com.nalib.fwk.exception.NaCameraException;
 import com.nalib.fwk.utils.DeviceUtil;
 import com.nalib.fwk.utils.NaLog;
+import com.nalib.fwk.utils.OrientationUtils;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -416,7 +416,7 @@ public class NaCameraEngine implements ICameraEngine, Camera.PreviewCallback {
             int width = mCaptureFormat.width;
             int height = mCaptureFormat.height;
             boolean isBack = (mCameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK);
-            int orientation = NaApi.getApi().getFrameOrientation(isBack, mCameraInfo.orientation);
+            int orientation = OrientationUtils.getFrameOrientation(isBack, mCameraInfo.orientation);
             mSurfaceHelper.onPreviewFrame(data, width, height, orientation, captureTimeNs);
         }
         mCamera.addCallbackBuffer(data);

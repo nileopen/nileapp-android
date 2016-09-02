@@ -1,22 +1,20 @@
-apply plugin: 'com.android.model.library'
+apply plugin: 'com.android.library'
 
-model {
-    android {
-        compileSdkVersion = 23
-        buildToolsVersion = "23.0.2"
 
-        defaultConfig {
-            minSdkVersion.apiLevel = 9
-            targetSdkVersion.apiLevel = 23
-            versionCode 1
-            versionName "1.0"
-        }
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
 
+    defaultConfig {
+        minSdkVersion 9
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
     }
-    android.buildTypes {
+    buildTypes {
         release {
             minifyEnabled false
-            proguardFiles.add(file('proguard-rules.txt'))
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
@@ -25,5 +23,29 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.facebook.fresco:fresco:0.10.0'
+
+    //fresco start
+    compile 'com.facebook.fresco:fresco:0.13.0'
+    // 在 API < 14 上的机器支持 WebP 时，需要添加
+    compile 'com.facebook.fresco:animated-base-support:0.13.0'
+
+    // 支持 GIF 动图，需要添加
+    compile 'com.facebook.fresco:animated-gif:0.13.0'
+
+    // 支持 WebP （静态图+动图），需要添加
+    compile 'com.facebook.fresco:animated-webp:0.13.0'
+    compile 'com.facebook.fresco:webpsupport:0.13.0'
+    //fresco end
+
+    //okhttp
+    compile 'com.zhy:okhttputils:2.6.2'
+
+    //gson
+    compile 'com.google.code.gson:gson:2.7'
+
+    //leakcanary start
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
+    //leakcanary end
 }
