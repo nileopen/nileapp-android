@@ -2,4 +2,11 @@
     <string name="app_name">哪儿天气</string>
     <string name="act_main_fresh">更新</string>
     <string name="act_main_nodata">暂无数据</string>
+    <string name="item2_humidity">相对湿度</string>
+    <string name="percent">%</string>
+    <string name="centigrade">°</string>
+    <string name="today">今天</string>
+    <string name="sprit">/</string>
+    <string name="tomorrow">明天</string>
+    <string name="after_tomorrow">后天</string>
 </resources>
